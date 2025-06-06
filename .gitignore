@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-
+/UPI_29052025_data.csv
 # production
 /build
 
