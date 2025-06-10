@@ -20,10 +20,9 @@ function About() {
         <div className="about-team">
           <h2>Meet the Team</h2>
           <ul>
-            <li>Elvis Dsouza - Frontend Developer</li>
-            <li>Adrian Anthony - Data Scientist</li>
-            <li>Abishek Jayaraj - Database Administrator</li>
-            <li>Craig Dsouza - Backend Developer</li>
+            <li>Elvis Dsouza – Founder & CEO</li>
+            <li>Jane Smith – Lead Data Scientist</li>
+            <li>John Doe – Head of Engineering</li>
           </ul>
         </div>
       </section>

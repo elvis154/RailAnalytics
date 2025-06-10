@@ -1,28 +1,18 @@
+// Dashboard.jsx
 import React from 'react';
-import './Dashboard.css';
+import { Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
-import { Outlet, useLocation } from 'react-router-dom';
-import StickyHeadTable from './components/Table';
+import './Dashboard.css';
 
-function Dashboard() {
-  const location = useLocation();
-
+const Dashboard = () => {
   return (
-    <div className="dashboard-layout">
+    <div className="dashboard-container">
       <Sidebar />
-      <main className="dashboard-main">
-        {/* Show StickyHeadTable only on the main /dashboard route */}
-        {location.pathname === '/dashboard' ? (
-          <div className="dashboard-container">
-            <h1>RailAnalytics Dashboard</h1>
-            <StickyHeadTable />
-          </div>
-        ) : (
-          <Outlet />
-        )}
-      </main>
+      <div className="dashboard-content">
+        <Outlet />
+      </div>
     </div>
   );
-}
+};
 
 export default Dashboard;

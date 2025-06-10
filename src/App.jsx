@@ -1,38 +1,40 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar.jsx';
-import Home from './Home.jsx';
-import About from './About.jsx';
-import Dashboard from './Dashboard.jsx';
-import Login from './Auth/Login.jsx';
-import Signup from './Auth/Signin.jsx';
-import PrivateRoute from './components/PrivateRoute.jsx';
+import Navbar from './components/Navbar';
+import Home from './Home';
+import About from './About';
+import Dashboard from './Dashboard';
+import Login from './Auth/Login';
+import Signup from './Auth/Signin';
+import PrivateRoute from './components/PrivateRoute';
+import Page1 from './components/Page1';
 import Display from './components/Display';
-import Insert from './components/Insert';
-import Edit from './components/Edit';
-import Use from './components/Use';
-import StickyHeadTable from './components/Table';
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        
+        {/* Protected Routes */}
         <Route path="/about" element={<PrivateRoute><About /></PrivateRoute>} />
+        
+        {/* Dashboard with Sidebar */}
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>}>
-          <Route index element={<Display />} />
+          <Route index element={<Page1 />} /> {/* Default to Page1 */}
+          <Route path="page1" element={<Page1 />} />
           <Route path="display" element={<Display />} />
-          <Route path="insert" element={<Insert />} />
-          <Route path="edit" element={<Edit />} />
-          <Route path="use" element={<Use />} />
         </Route>
+        
+        {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
 }
 
-export default App; 
+export default App;

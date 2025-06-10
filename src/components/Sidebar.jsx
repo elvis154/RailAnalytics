@@ -4,14 +4,32 @@ import './Sidebar.css';
 
 const Sidebar = () => (
   <aside className="sidebar">
-    <div className="sidebar-header">Dashboard</div>
     <nav className="sidebar-nav">
-      <NavLink to="display" className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>Display</NavLink>
-      <NavLink to="insert" className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>Insert</NavLink>
-      <NavLink to="edit" className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>Edit</NavLink>
-      <NavLink to="use" className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}>Use</NavLink>
+      <NavLink 
+        to="page1"
+        className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}
+      >
+        <span className="material-icons-outlined">insights</span>
+        <span>Analytics</span>
+      </NavLink>
+      <NavLink 
+        to="display"
+        className={({ isActive }) => isActive ? 'sidebar-link active' : 'sidebar-link'}
+      >
+        <span className="material-icons-outlined">dashboard</span>
+        <span>Display</span>
+      </NavLink>
+      <div className="sidebar-footer">
+        <div className="user-profile">
+          <div className="avatar">JS</div>
+          <div className="user-info">
+            <div className="username">John Smith</div>
+            <div className="user-role">Admin</div>
+          </div>
+        </div>
+      </div>
     </nav>
   </aside>
 );
 
-export default Sidebar; 
+export default Sidebar;
