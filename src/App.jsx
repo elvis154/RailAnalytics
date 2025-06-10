@@ -11,6 +11,7 @@ import Display from './components/Display';
 import Insert from './components/Insert';
 import Edit from './components/Edit';
 import Use from './components/Use';
+import StickyHeadTable from './components/Table';
 
 function App() {
   return (
