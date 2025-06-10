@@ -1,11 +1,15 @@
 import React from 'react';
 import './Dashboard.css';
+import Sidebar from './components/Sidebar';
+import { Outlet } from 'react-router-dom';
 
 function Dashboard() {
   return (
-    <div className="dashboard-container">
-      <h1>Dashboard</h1>
-      <p>This is your dashboard.</p>
+    <div className="dashboard-layout">
+      <Sidebar />
+      <main className="dashboard-main">
+        <Outlet />
+      </main>
     </div>
   );
 }
