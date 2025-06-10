@@ -1,0 +1,22 @@
+pg 1:
+    row 1: 
+        SELECT SUM(CHBL_WGHT) AS SUM_DIFF
+        FROM {TARGET_SCHEMA}.{TARGET_TABLE}
+        WHERE ZONE_FRM = 'WR'
+    row 2:
+        SELECT SUM(TOT_FRT_INCL_GST - TOT_GST) AS SUM_DIFF
+        FROM {TARGET_SCHEMA}.{TARGET_TABLE}
+        WHERE ZONE_FRM = 'WR'
+    row 3:
+        SELECT SUM(WR) AS SUM_DIFF
+        FROM {TARGET_SCHEMA}.{TARGET_TABLE}
+        WHERE ZONE_FRM = 'WR'
+    row 4:
+        SELECT SUM(WR) AS SUM_DIFF
+        FROM {TARGET_SCHEMA}.{TARGET_TABLE}
+        WHERE ZONE_FRM != 'WR'
+    row 5: row 3 + row 4
+    row 6: row 5 / row 2
+    row 7: row 3 / row 2
+    row 8: row 3 / row 5
+    row 9: row 4 / row 5
