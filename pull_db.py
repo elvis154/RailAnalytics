@@ -17,7 +17,7 @@ DB_SID = "traffic"
 
 # --- Table Details ---
 TARGET_SCHEMA = "FOISGOODS"
-TARGET_TABLE = "UPI_29052025"
+TARGET_TABLE = "carr_apmt_excl_adv_24_25"
 
 # --- CSV Output File ---
 OUTPUT_CSV_FILENAME = f"{TARGET_TABLE}_data.csv" # e.g., WR_TRAIN_LIST_data.csv
