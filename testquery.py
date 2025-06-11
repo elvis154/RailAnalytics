@@ -2,7 +2,7 @@ import oracledb
 import sys
 
 # --- Oracle Instant Client Configuration ---
-INSTANT_CLIENT_PATH = r"C:\Users\Abishek\Downloads\instantclient-basic-windows.x64-23.8.0.25.04\instantclient_23_8"
+INSTANT_CLIENT_PATH = r"C:\Users\Craig Michael Dsouza\Downloads\instantclient-basic-windows.x64-23.8.0.25.04\instantclient_23_8"
 
 # --- Database Connection Parameters ---
 DB_USER = "intern"
