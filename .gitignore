@@ -8,6 +8,7 @@
 # testing
 /coverage
 /UPI_29052025_data.csv
+/carr_apmt_excl_adv_24_25_data.csv
 # production
 /build
 
