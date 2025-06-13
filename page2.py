@@ -415,48 +415,49 @@ try:
     """, unsafe_allow_html=True)
 
     # Visualization Tabs
-    tab1, tab2, tab3 = st.tabs(["Revenue Trend", "Commodity Comparison", "Detailed Data"])
+    tab1, tab3 = st.tabs(["Revenue Trend", "Detailed Data"])
 
     with tab1:
-        # Trend chart
-        st.plotly_chart(
-            create_trend_chart(final_df, table_years, selected_year_code),
-            use_container_width=True
+        # Pie chart for Revenue Trend (current year) - Top 10 commodities, rest as 'Others'
+        pie_df = main_df[['Commodity', f'Revenue_{selected_year_code}']].copy()
+        pie_df = pie_df[pie_df[f'Revenue_{selected_year_code}'] > 0]
+        pie_df = pie_df.sort_values(by=f'Revenue_{selected_year_code}', ascending=False)
+        top10 = pie_df.head(10)
+        others_sum = pie_df.iloc[10:][f'Revenue_{selected_year_code}'].sum()
+        if others_sum > 0:
+            top10 = pd.concat([
+                top10,
+                pd.DataFrame({
+                    'Commodity': ['Others'],
+                    f'Revenue_{selected_year_code}': [others_sum]
+                })
+            ], ignore_index=True)
+        fig_pie = px.pie(
+            top10,
+            names='Commodity',
+            values=f'Revenue_{selected_year_code}',
+            title=f"Revenue Share by Commodity (Top 10, {year_labels[selected_year_code]})",
+            hole=0.4
         )
-        
-        # Stacked bar chart for current year
-        current_df = main_df[['Commodity', f'Revenue_{selected_year_code}']].sort_values(
-            f'Revenue_{selected_year_code}', ascending=False
-        )
-        fig = px.bar(
-            current_df,
-            x='Commodity',
-            y=f'Revenue_{selected_year_code}',
-            title=f"Revenue by Commodity ({year_labels[selected_year_code]})",
-            labels={f'Revenue_{selected_year_code}': 'Revenue (₹ Crores)'},
-            color=f'Revenue_{selected_year_code}',
-            color_continuous_scale='blues'
-        )
-        fig.update_layout(height=500)
-        st.plotly_chart(fig, use_container_width=True)
+        fig_pie.update_traces(textinfo='percent+label')
+        fig_pie.update_layout(height=500, legend_title_text='Commodity')
+        st.plotly_chart(fig_pie, use_container_width=True)
 
-    with tab2:
-        # Heatmap of completion percentages
-        heatmap_df = final_df.set_index('Commodity')
-        heatmap_df = heatmap_df[[f'Percentage_{y}' for y in table_years]]
-        heatmap_df.columns = [year_labels[y] for y in table_years]
-        
-        fig = px.imshow(
-            heatmap_df,
-            labels=dict(x="Fiscal Year", y="Commodity", color="Completion %"),
-            color_continuous_scale='blues',
-            aspect="auto"
-        )
-        fig.update_layout(
-            height=600,
-            title="Annual Completion Percentage by Commodity"
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        # Stacked bar chart for current year (optional, can remove if only pie needed)
+        # current_df = main_df[['Commodity', f'Revenue_{selected_year_code}']].sort_values(
+        #     f'Revenue_{selected_year_code}', ascending=False
+        # )
+        # fig = px.bar(
+        #     current_df,
+        #     x='Commodity',
+        #     y=f'Revenue_{selected_year_code}',
+        #     title=f"Revenue by Commodity ({year_labels[selected_year_code]})",
+        #     labels={f'Revenue_{selected_year_code}': 'Revenue (₹ Crores)'},
+        #     color=f'Revenue_{selected_year_code}',
+        #     color_continuous_scale='blues'
+        # )
+        # fig.update_layout(height=500)
+        # st.plotly_chart(fig, use_container_width=True)
 
     with tab3:
         # Detailed data table
@@ -506,13 +507,10 @@ try:
         remaining_period = f"{next_month} to March"
     
     if remaining_period:
-        st.markdown("---")
-        st.markdown("### Revenue Projections")
-        
         # Calculate historical completion pattern
         past_years = [y for y in table_years if y != selected_year_code][:4]
         past_percentages = [float(totals[f'Percentage_{y}']) for y in past_years]
-        historical_completion_pct = sum(past_percentages) / len(past_percentages) if past_percentages else 0
+        historical_completion_pct = float(completion_pct)  # Use annual completion percentage as input
         remaining_percentage = 100 - historical_completion_pct
         
         # Calculate predictions
@@ -522,6 +520,7 @@ try:
         
         # Calculate commodity-wise predictions
         current_proportions = final_df[f'Revenue_{selected_year_code}'] / current_total
+
         predicted_remaining = (current_total * remaining_percentage) / historical_completion_pct if historical_completion_pct != 0 else 0
         remaining_df[f'Revenue_{selected_year_code}'] = current_proportions * predicted_remaining
         remaining_df[f'Percentage_{selected_year_code}'] = remaining_percentage
@@ -604,7 +603,26 @@ try:
                     )
                 }
             )
-
+        
+        # Summary of predictions
+        prediction_totals = {
+            'Commodity': f'Predicted Total ({remaining_period})',
+            f'Revenue_{selected_year_code}': remaining_df[f'Revenue_{selected_year_code}'].sum(),
+            f'Percentage_{selected_year_code}': f"{remaining_percentage:.2f}%"
+        }
+        st.dataframe(pd.DataFrame([prediction_totals]), use_container_width=True, hide_index=True)
+        
+        # Add total prediction summary
+        current_year_total = totals[f'Revenue_{selected_year_code}']
+        predicted_remaining_total = remaining_df[f'Revenue_{selected_year_code}'].sum()
+        total_predicted = current_year_total + predicted_remaining_total
+        st.markdown(f"""
+        **Predicted Apportioned Revenue for {year_labels[selected_year_code]}:**
+        - Current Revenue (up to {selected_month}): {current_year_total:.2f} Crores
+        - Predicted Remaining: {predicted_remaining_total:.2f} Crores
+        - Total Predicted: {total_predicted:.2f} Crores
+        """)
+        
 except Exception as e:
     st.error(f"An error occurred while processing the data: {str(e)}")
     st.error("Please try adjusting your filters or contact support if the issue persists.")
